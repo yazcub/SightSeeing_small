@@ -1,1 +1,2 @@
 singleton Constants 1.0 Constants.qml
+singleton Descriptions 1.0 Descriptions.qml

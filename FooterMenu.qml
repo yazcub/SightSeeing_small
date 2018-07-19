@@ -3,11 +3,12 @@ import QtGraphicalEffects 1.0
 import SightSeeing_small 1.0
 
 Item {
+    id: itemroot
     width: parent.width
     height: parent.height
 
-    property string letter
-
+    property string desctext
+    signal menuclicked
 
     Rectangle {
         id: _rectangle
@@ -15,7 +16,32 @@ Item {
         height: parent.height / 11
         color: "#fff"
         anchors.top: parent.top
-        anchors.topMargin:parent.height-_rectangle.height
+        anchors.topMargin: parent.height - _rectangle.height
+
+        Rectangle {
+            id: circleinner
+            clip: true
+            color: "#f84a17"
+            anchors.centerIn: parent
+
+            width: 0
+            height: 0
+            scale: 0
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                console.log("clicked")
+                if (itemroot.state != "opendesc") {
+                    itemroot.state = "opendesc"
+                    menuclicked()
+                } else {
+                    itemroot.state="closedesc"
+                    menuclicked()
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -27,30 +53,34 @@ Item {
         anchors.leftMargin: 20
         radius: 100
         color: "#f84a17"
+    }
 
-        Text {
-            text: "\uf1d8"
-            anchors.centerIn: parent
-            font.pixelSize: 17
-            color: "#fff"
-        }
+    Text {
+        id: _circleicon
+        text: "\uf1d8"
+        anchors.centerIn: _circle
+        font.pixelSize: 17
+        color: "#fff"
+        z: 2
     }
 
     Rectangle {
         width: parent.width
         height: parent.height - _rectangle.height
         anchors.top: _rectangle.bottom
-        color: "#666"
+        color: "#fff"
         Text {
             id: name
-            text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat."
+            text: desctext
             wrapMode: Text.Wrap
             width: parent.width - 40
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: 20
             anchors.topMargin: 20
+            color: "#000"
         }
+        z: 3
     }
 
     DropShadow {
@@ -65,16 +95,196 @@ Item {
     }
 
     Text {
-        id: button
+        id: _buttontext
         anchors.centerIn: _rectangle
-        text: "Explore this city"
+        text: "Explore this Sight"
         font.family: Constants.fontPoppinsRegularFamily
         font.pixelSize: 13
         font.bold: true
+        opacity: 1
     }
 
+    Text {
+        id: _circlebacktext
+        text: "Back to Sights"
+        anchors.top: _circle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: 5 //-((_circle.height / 2) + (_circlebacktext.height/2))
+        font.family: Constants.fontPoppinsRegularFamily
+        font.pixelSize: 13
+        font.bold: true
+        color: "#fff"
+        z: 2
+    }
 
-//    states: {
+    states: [
+        State {
+            name: "opendesc"
+            PropertyChanges {
+                target: _rectangle
+                anchors.topMargin: 0
+            }
+            PropertyChanges {
+                target: _buttontext
+                opacity: 0
+            }
+            PropertyChanges {
+                target: dropShadow2
+                visible: false
+            }
 
-//    }
+            PropertyChanges {
+                target: circleinner
+                width: 10
+                height: 1
+            }
+        },
+        State {
+            name: "closedesc"
+            PropertyChanges {
+                target: _rectangle
+                anchors.topMargin: parent.height - _rectangle.height
+            }
+            PropertyChanges {
+                target: _buttontext
+                opacity: 1
+            }
+            PropertyChanges {
+                target: circleinner
+                width: 10
+                height: 1
+            }
+            PropertyChanges {
+                target: dropShadow2
+                visible: false
+            }
+        }
+    ]
+
+    property bool trigger: false
+    onTriggerChanged: triggerChangeProc()
+
+    transitions: [
+        Transition {
+            from: "*"
+            to: "opendesc"
+            SequentialAnimation {
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: _circle
+                        property: "anchors.leftMargin"
+                        duration: 200
+                        from: anchors.leftMargin
+                        to: (parent.width / 2) - (_circle.width / 2)
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    NumberAnimation {
+                        target: _buttontext
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                NumberAnimation {
+                    target: circleinner
+                    property: "scale"
+                    duration: 300
+                    easing.type: Easing.InQuad
+                    to: 60
+                }
+
+                NumberAnimation {
+                    property: "anchors.topMargin"
+                    duration: 800
+                    easing.type: Easing.OutQuint
+                }
+
+                NumberAnimation {
+                    target: _circleicon
+                    property: "anchors.verticalCenterOffset"
+                    duration: 200
+                    easing.type: Easing.InOutQuad
+                    from: anchors.verticalCenterOffset
+                    to: -50
+                }
+
+                NumberAnimation {
+                    target: _circlebacktext
+                    property: "anchors.topMargin"
+                    duration: 100
+                    easing.type: Easing.OutQuint
+                    from: anchors.topMargin
+                    to: -((_circle.height / 2) + (_circlebacktext.height / 2))
+                }
+            }
+        },
+        Transition {
+            from: "*"
+            to: "closedesc"
+            SequentialAnimation {
+                NumberAnimation {
+                    target: _circlebacktext
+                    property: "anchors.topMargin"
+                    duration: 100
+                    easing.type: Easing.OutQuint
+                    from: anchors.topMargin
+                    to: 5
+                }
+
+                NumberAnimation {
+                    target: _circleicon
+                    property: "anchors.verticalCenterOffset"
+                    duration: 200
+                    easing.type: Easing.InOutQuad
+                    from: -50 //anchors.verticalCenterOffset
+                    to: 0
+                }
+
+                NumberAnimation {
+                    target: circleinner
+                    property: "scale"
+                    duration: 300
+                    easing.type: Easing.InQuad
+                    to: 0
+                }
+
+                NumberAnimation {
+                    property: "anchors.topMargin"
+                    duration: 800
+                    easing.type: Easing.OutQuint
+                }
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: _circle
+                        property: "anchors.leftMargin"
+                        duration: 200
+                        from: (parent.width / 2) - (_circle.width / 2)
+                        to: 20
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    NumberAnimation {
+                        target: _buttontext
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                PropertyAction {
+                    target:itemroot
+                    property:"trigger"
+                    value: "true"
+                }
+            }
+        }
+    ]
+
+    function triggerChangeProc(){
+        dropShadow2.visible = true
+        trigger = false
+    }
 }
