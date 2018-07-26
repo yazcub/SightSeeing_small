@@ -10,6 +10,7 @@ Item {
     property int noValue
     property string titleValue
     property string imageName
+    property var updown: 1
 
 
     //    opacity: 1
@@ -31,7 +32,7 @@ Item {
                 target: _imagemenu
                 property: "y"
                 duration: 200
-                from: 50
+                from: 50 * updown
                 to: 0
                 easing.type: Easing.OutExpo
             }
@@ -101,7 +102,7 @@ Item {
                     property: "anchors.topMargin"
                     duration: 150
                     from: anchors.topMargin
-                    to: anchors.topMargin - 80
+                    to: anchors.topMargin - (80*updown)
                     easing.type: Easing.InOutQuad
                     running: false
                 }
@@ -118,7 +119,7 @@ Item {
                     target: _city
                     property: "anchors.topMargin"
                     duration: 150
-                    from: anchors.topMargin + 50
+                    from: anchors.topMargin + (50*updown)
                     to: anchors.topMargin
                     easing.type: Easing.OutExpo
                     running: false

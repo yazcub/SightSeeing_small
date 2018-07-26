@@ -1,6 +1,8 @@
 import QtQuick 2.11
 import QtGraphicalEffects 1.0
 import SightSeeing_small 1.0
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 
 Item {
     id: itemroot
@@ -69,16 +71,19 @@ Item {
         height: parent.height - _rectangle.height
         anchors.top: _rectangle.bottom
         color: "#fff"
-        Text {
+        TextArea {
             id: name
-            text: desctext
+            text:  desctext
             wrapMode: Text.Wrap
-            width: parent.width - 40
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.leftMargin: 20
-            anchors.topMargin: 20
-            color: "#000"
+            backgroundVisible: true
+            readOnly: true
+            textFormat: TextEdit.RichText
+            anchors.fill: parent
+            anchors.margins:-1
+            style: TextAreaStyle {
+                backgroundColor : "white"
+                textColor: "black"
+            }
         }
         z: 3
     }

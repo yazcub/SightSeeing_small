@@ -50,7 +50,6 @@ Window {
             if (_mainmousearea.visible != true)
                 _mainmousearea.visible = true
             else _mainmousearea.visible = false
-
         }
     }
 
@@ -65,11 +64,12 @@ Window {
                 if (lastpos > mouseY) {
                     console.log("up")
                     actualindex = actualindex + 1
-
+                    _imagemenu.updown=1
                     if (actualindex > (imagesArr.length - 1))
                         actualindex = 0
                 } else if (lastpos < mouseY) {
                     console.log("down")
+                    _imagemenu.updown=-1
                     actualindex = actualindex - 1
 
                     if (actualindex < 0)
