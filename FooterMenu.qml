@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtGraphicalEffects 1.0
 import SightSeeing_small 1.0
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
 
 Item {
@@ -71,18 +71,19 @@ Item {
         height: parent.height - _rectangle.height
         anchors.top: _rectangle.bottom
         color: "#fff"
-        TextArea {
-            id: name
-            text:  desctext
-            wrapMode: Text.Wrap
-            backgroundVisible: true
-            readOnly: true
-            textFormat: TextEdit.RichText
+        Flickable {
             anchors.fill: parent
-            anchors.margins:-1
-            style: TextAreaStyle {
-                backgroundColor : "white"
-                textColor: "black"
+            contentWidth: parent.width; contentHeight: parent.height
+            flickableDirection: Flickable.VerticalFlick
+            TextArea.flickable: TextArea {
+                text:  desctext
+                wrapMode: Text.Wrap
+                readOnly: true
+                textFormat: TextEdit.RichText
+                anchors.margins:-1
+                topPadding: 40
+                leftPadding: 35
+                rightPadding: 35
             }
         }
         z: 3

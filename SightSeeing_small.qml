@@ -9,7 +9,7 @@ Window {
     height: 640
     title: qsTr("Hello World")
 
-    property variant textArr: ["Ayasofya", "Kiz Kulesi", "Skyland Tower", "Sultanahmet"]
+    property variant textArr: ["Ayasofya", "Kız Kulesi", "Skyland Tower", "Sultanahmet"]
     property variant imagesArr: ["ayasofya.jpg", "kizkulesi.jpg", "skyland_tower.jpeg", "sultaahmet.jpg"]
     property variant descriptArr: [Descriptions.ayasofya, Descriptions.kizkulesi, Descriptions.skylandtower, Descriptions.sultanahmet]
     property int lastpos

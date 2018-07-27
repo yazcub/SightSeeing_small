@@ -10,7 +10,7 @@ Item {
     property int noValue
     property string titleValue
     property string imageName
-    property var updown: 1
+    property int updown: 1
 
 
     //    opacity: 1
